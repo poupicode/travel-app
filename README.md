@@ -40,6 +40,7 @@ React Native a été choisi pour sa maturité, sa large communauté et la compat
 ### Backend : Supabase
 
 Supabase remplit trois rôles :
+
 - **Auth** — inscription, connexion, gestion des sessions JWT
 - **Database** — PostgreSQL avec Row Level Security (RLS) pour isoler les données par utilisateur
 - **Storage** — bucket `destination-images` pour le stockage des images uploadées
@@ -70,6 +71,7 @@ src/
 ```
 
 **Principes appliqués :**
+
 - Aucun appel API directement dans les composants UI → tout passe par `services/`
 - Logique métier (états, effets, filtres) isolée dans des `hooks/` custom
 - Composants UI sans état business, pilotés uniquement par leurs props
@@ -79,6 +81,7 @@ src/
 ## Fonctionnalités implémentées
 
 ### 🔐 Authentification
+
 - Inscription avec email + mot de passe (Supabase Auth)
 - Connexion / déconnexion
 - Persistence de session (token JWT stocké via Supabase + AsyncStorage)
@@ -86,24 +89,27 @@ src/
 - Upgrade de rôle via code secret depuis l'écran Settings
 
 ### 🧭 Navigation
+
 - Onboarding animé (carousel FlatList) au premier lancement
 - Bottom navigation adaptative selon le rôle (Traveler / Guide)
 - Stack navigation avec animations différenciées (slide, fade, bottom sheet)
 
 ### 📋 Écrans
-| Écran | Rôle |
-|---|---|
-| Onboarding | Présentation de l'app (3 slides) |
-| Login / Register | Authentification |
-| Feed | Liste des destinations avec filtre continent + recherche texte |
-| Detail | Détail d'une destination, booking, edit/delete (guide propriétaire) |
-| Trips (Traveler) | Voyages planifiés avec possibilité d'annuler |
-| Mes destinations (Guide) | CRUD complet sur ses destinations |
-| Favoris | Destinations mises en favoris |
-| Settings | Thème, infos compte, déconnexion |
-| Créer / Modifier | Formulaire destination avec géocoding et upload image |
+
+| Écran                    | Rôle                                                                |
+| ------------------------ | ------------------------------------------------------------------- |
+| Onboarding               | Présentation de l'app (3 slides)                                    |
+| Login / Register         | Authentification                                                    |
+| Feed                     | Liste des destinations avec filtre continent + recherche texte      |
+| Detail                   | Détail d'une destination, booking, edit/delete (guide propriétaire) |
+| Trips (Traveler)         | Voyages planifiés avec possibilité d'annuler                        |
+| Mes destinations (Guide) | CRUD complet sur ses destinations                                   |
+| Favoris                  | Destinations mises en favoris                                       |
+| Settings                 | Thème, infos compte, déconnexion                                    |
+| Créer / Modifier         | Formulaire destination avec géocoding et upload image               |
 
 ### 📡 Données & API
+
 - Chargement asynchrone avec états `loading` / `success` / `error`
 - Bouton "Réessayer" en cas d'erreur réseau
 - Données déjà chargées restent affichées si le réseau est coupé
@@ -112,12 +118,14 @@ src/
 ### 📱 Fonctionnalités natives
 
 #### Géolocalisation (`expo-location`)
+
 - Détection automatique de la position GPS
 - Tri des destinations par proximité (même pays → même continent → reste)
 - Permission demandée explicitement avec message justifié
 - Gestion du refus (message d'erreur, pas de crash)
 
 #### Galerie photo (`expo-image-picker`)
+
 - Sélection d'image depuis la galerie pour les destinations (guides)
 - Recadrage 16:9 intégré
 - Permission demandée au moment de l'action
@@ -125,6 +133,7 @@ src/
 - Upload vers Supabase Storage (base64 → Uint8Array)
 
 ### 🎨 UX
+
 - Thème Dark / Light / System (suivi automatique des préférences OS)
 - Design cohérent inspiré Dribbble (palette sombre, accents jaune)
 - Feedback visuel sur toutes les actions asynchrones (ActivityIndicator)
@@ -136,7 +145,7 @@ src/
 
 - Code source : dépôt Git
 - Captures d'écran : voir dossier `/screenshots`
-- Vidéo de démonstration : voir fichier `demo.mp4`
+- Vidéo de démonstration : voir fichier `Vidéo Démo Dev Mobile Gilles Marchesse.mp4`
 
 ---
 
@@ -145,8 +154,8 @@ src/
 Le projet utilise les variables Supabase configurées dans `src/lib/supabase.js` :
 
 ```js
-const SUPABASE_URL = 'https://xxx.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJ...';
+const SUPABASE_URL = "https://xxx.supabase.co";
+const SUPABASE_ANON_KEY = "eyJ...";
 ```
 
 > ⚠️ Pour lancer le projet, remplace ces valeurs par celles de ton propre projet Supabase.
@@ -155,11 +164,11 @@ const SUPABASE_ANON_KEY = 'eyJ...';
 
 ## Tables Supabase requises
 
-| Table | Colonnes principales |
-|---|---|
-| `profiles` | `id`, `username`, `role` (`traveler` / `guide`) |
+| Table          | Colonnes principales                                                                           |
+| -------------- | ---------------------------------------------------------------------------------------------- |
+| `profiles`     | `id`, `username`, `role` (`traveler` / `guide`)                                                |
 | `destinations` | `id`, `name`, `location`, `continent`, `price`, `rating`, `image`, `description`, `created_by` |
-| `favorites` | `id`, `user_id`, `destination_id` |
-| `trips` | `id`, `user_id`, `destination_id`, `booked_at` |
+| `favorites`    | `id`, `user_id`, `destination_id`                                                              |
+| `trips`        | `id`, `user_id`, `destination_id`, `booked_at`                                                 |
 
 Storage : bucket public `destination-images`.
